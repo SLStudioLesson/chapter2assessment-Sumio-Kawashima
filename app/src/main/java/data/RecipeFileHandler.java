@@ -1,5 +1,9 @@
 package data;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -16,18 +20,28 @@ public class RecipeFileHandler {
 
     /**
      * 設問1: 一覧表示機能
-     * recipes.txtからレシピデータを読み込み、それをリスト形式で返します。 <br> 
+     * recipes.txtからレシピデータを読み込み、それをリスト形式で返します。 <br>
      * IOExceptionが発生したときは<i>Error reading file: 例外のメッセージ</i>とコンソールに表示します。
      *
      * @return レシピデータ
      */
     public ArrayList<String> readRecipes() {
-        // try {
 
-        // } catch (IOException e) {
-        //     System.out.println("Error reading file:" + e.getMessage());
-        // }
-        return null;
+        // 返り値用のリスト
+        ArrayList<String> recipes = new ArrayList<>();
+
+        String line;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            // ファイルを一行ずつ読み込む
+            while ((line = reader.readLine()) != null) {
+                // レシピをリストに保存
+                recipes.add(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file:" + e.getMessage());
+        }
+
+        return recipes;
     }
 
     /**
@@ -35,15 +49,18 @@ public class RecipeFileHandler {
      * 新しいレシピをrecipes.txtに追加します。<br>
      * レシピ名と材料はカンマ区切りで1行としてファイルに書き込まれます。
      *
-     * @param recipeName レシピ名
+     * @param recipeName  レシピ名
      * @param ingredients 材料名
      */
-     // 
+    //
     public void addRecipe(String recipeName, String ingredients) {
-        // try {
-
-        // } catch (IOException e) {
-
-        // }
+        // 引数のレシピ名と材料名を連結
+        String addSentence = String.join(",", recipeName, ingredients);
+        // ファイル末尾に追加
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(addSentence + "\n");
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
     }
 }
